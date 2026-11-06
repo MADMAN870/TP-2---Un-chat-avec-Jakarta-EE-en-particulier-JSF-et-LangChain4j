@@ -7,51 +7,53 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>tp-jsf</artifactId>
+    <artifactId>tp1</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
+    <name>TP 1 - Accès direct à l'API d'un LLM, avec Jakarta EE et en particulier JSF</name>
+    <description>TP 1 - Accès direct à l'API d'un LLM, avec Jakarta EE et en particulier JSF</description>
+
     <properties>
-        <maven.compiler.release>17</maven.compiler.release>
+        <maven.compiler.release>25</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
 
-        <!-- Jakarta EE 10 API -->
+        <!-- Jakarta EE 11 API -->
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-web-api</artifactId>
-            <version>10.0.0</version>
+            <version>11.0.0</version>
             <scope>provided</scope>
         </dependency>
 
-        <!-- PrimeFaces 14 - Jakarta version -->
+        <!-- PrimeFaces 16.0.0 - Jakarta -->
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            <version>14.0.0</version>
-            <classifier>jakarta</classifier>
+            <version>16.0.0</version>
         </dependency>
 
     </dependencies>
 
     <build>
-        <finalName>tp-jsf</finalName>
+        <finalName>tp1</finalName>
 
         <plugins>
 
-            <!-- Maven Compiler -->
+            <!-- Maven Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
+                <version>3.16.0</version>
                 <configuration>
-                    <release>17</release>
+                    <release>25</release>
                 </configuration>
             </plugin>
 
-            <!-- WAR Plugin -->
+            <!-- Maven WAR Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>

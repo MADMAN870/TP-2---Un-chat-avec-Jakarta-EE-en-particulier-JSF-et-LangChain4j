@@ -1,6 +1,9 @@
 
 package com.example.tpjsf;
 
+import com.example.tpjsf.llm.JsonAdapterPourGemini;
+import com.example.tpjsf.llm.LlmInteraction;
+
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.model.SelectItem;
@@ -10,6 +13,7 @@ import jakarta.inject.Named;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Named
@@ -19,7 +23,7 @@ public class Bb implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Rôle "système" que l'on attribuera plus tard à un LLM.
+     * Rôle "système" attribué au LLM.
      */
     private String roleSysteme;
 
@@ -29,7 +33,7 @@ public class Bb implements Serializable {
     private boolean roleSystemeChangeable = true;
 
     /**
-     * Liste de tous les rôles de l'API prédéfinis.
+     * Liste des rôles système prédéfinis.
      */
     private List<SelectItem> listeRolesSysteme;
 
@@ -39,7 +43,7 @@ public class Bb implements Serializable {
     private String question;
 
     /**
-     * Dernière réponse de l'API OpenAI.
+     * Dernière réponse du LLM.
      */
     private String reponse;
 
@@ -64,10 +68,10 @@ public class Bb implements Serializable {
     private String texteReponseJson;
 
     /**
-     * Service pour modifier la question et générer la réponse.
+     * Adaptateur JSON pour communiquer avec Gemini.
      */
     @Inject
-    private GenerateurResponse generateurReponse;
+    private JsonAdapterPourGemini jsonAdapter;
 
     /**
      * Constructeur sans argument.
@@ -146,7 +150,7 @@ public class Bb implements Serializable {
     // ============================================================
 
     /**
-     * Envoie la question au serveur.
+     * Envoie la question au serveur Gemini.
      */
     public String envoyer() {
 
@@ -169,11 +173,29 @@ public class Bb implements Serializable {
             this.roleSystemeChangeable = false;
         }
 
-        // Génère la réponse.
-        this.reponse = this.generateurReponse.genererReponse(
-                this.question,
-                this.roleSysteme
-        );
+        try {
+            LlmInteraction interaction =
+                    jsonAdapter.envoyerRequete(question, this.roleSysteme);
+
+            this.reponse = interaction.reponseExtraite();
+            this.texteRequeteJson = interaction.questionJson();
+            this.texteReponseJson = interaction.reponseJson();
+
+        } catch (Exception e) {
+
+            this.reponse = "Erreur : " + e.getMessage();
+
+            FacesMessage message = new FacesMessage(
+                    FacesMessage.SEVERITY_ERROR,
+                    "Problème de connexion avec l'API du LLM",
+                    "Problème de connexion avec l'API du LLM"
+                            + e.getMessage() + "\n"
+                            + Arrays.toString(e.getStackTrace())
+            );
+
+            FacesContext.getCurrentInstance()
+                    .addMessage(null, message);
+        }
 
         // Ajoute la question et la réponse à l'historique.
         afficherConversation();
@@ -232,9 +254,9 @@ public class Bb implements Serializable {
             );
 
             role = """
-                    Your are a travel guide. If the user type the name of a country or of a town,
+                    You are a travel guide. If the user type the name of a country or of a town,
                     you tell them what are the main places to visit in the country or the town
-                    are you tell them the average price of a meal.
+                    and you tell them the average price of a meal.
                     """;
 
             this.listeRolesSysteme.add(

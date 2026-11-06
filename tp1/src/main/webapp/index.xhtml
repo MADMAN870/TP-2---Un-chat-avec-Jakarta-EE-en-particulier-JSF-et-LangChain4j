@@ -8,7 +8,7 @@
 <h:head>
     <h:outputStylesheet name="css/mycsslayout.css"/>
     <h:outputScript name="js/script.js" target="head"/>
-    <title>Conversation</title>
+    <title>TP 1 - Accès direct à l'API d'un LLM, avec Jakarta EE et en particulier JSF</title>
 </h:head>
 
 <h:body>
@@ -58,6 +58,8 @@
                             <button type="button" onclick="copyToClipboard('question')">Copier question</button>
                             <button type="button" onclick="toutEffacer()">Effacer question et réponse</button>
                         </h:panelGroup>
+                        <p:outputPanel style="display:flex; align-items: center; gap: 10px">
+                        <h:outputText value="Mode debug : "/>
 
                         <h:inputTextarea id="question"
                                          value="#{bb.question}"
@@ -73,50 +75,27 @@
                             <h:outputText value="Réponse :"/>
                             <button type="button" onclick="copyToClipboard('reponse')">Copier réponse</button>
                         </h:panelGroup>
-
                         <h:inputTextarea id="reponse"
                                          value="#{bb.reponse}"
                                          title="Réponse"
                                          cols="50"
                                          rows="15"/>
+                        </p:outputPanel>
 
                         <!-- Activation du mode debug -->
                         <p:outputPanel style="display:flex; align-items: center; gap: 10px">
                             <h:outputText value="Mode debug : "/>
 
-                            <p:toggleSwitch id="debugSwitch"
+                            <p:toggleSwitch id="debugSwitch2"
                                             value="#{bb.debug}"
                                             styleClass="mb-2"
                                             label="Mode debug"/>
 
-                            <p:tooltip for="debugSwitch"
+                            <p:tooltip for="debugSwitch2"
                                        value="Active ou non l'affichage du JSON sur les requêtes et réponses du LLM."/>
                         </p:outputPanel>
 
-                    </h:panelGrid>
-
-                    <!-- Zone d'affichage du JSON en mode debug -->
-                    <h:panelGrid id="paneldebug"
-                                 columns="1"
-                                 rendered="#{bb.debug}">
-
-                        <h:outputText value="Requête JSON envoyée au LLM :"/>
-
-                        <h:inputTextarea id="texteRequeteJson"
-                                         value="#{bb.texteRequeteJson}"
-                                         cols="50"
-                                         rows="10"
-                                         readonly="true"/>
-
-                        <h:outputText value="Réponse JSON reçue du LLM :"/>
-
-                        <h:inputTextarea id="texteReponseJson"
-                                         value="#{bb.texteReponseJson}"
-                                         cols="50"
-                                         rows="10"
-                                         readonly="true"/>
-
-                    </h:panelGrid>
+</h:panelGrid>
 
                 </h:panelGrid>
 
@@ -128,7 +107,6 @@
                         <h:outputText value="Conversation :"/>
                         <button type="button" onclick="copyToClipboard('conversation')">Copier conversation</button>
                     </h:panelGroup>
-
                     <h:inputTextarea id="conversation"
                                      rows="30"
                                      cols="50"
